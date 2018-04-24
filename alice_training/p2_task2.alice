@@ -1,0 +1,33 @@
+declare DailyWeightedSpread[security, date]: number
+declare DateArray[date]: boolean
+declare SecurityIndex: security
+declare DateIndex: date
+declare weightedValue[date]: number
+declare spreadValue: number
+
+at start
+
+  read "weighted_spread.csv", security, date, DailyWeightedSpread
+
+  foreach SecurityIndex, DateIndex, spreadValue in
+    DailyWeightedSpread[] do
+    DateArray[DateIndex] = true
+  end foreach
+  
+  declare tmp: boolean
+  foreach DateIndex, tmp in DateArray[] do
+    declare let accuSpread = 0
+    declare let numSec = 0
+    per security
+      if defined(DailyWeightedSpread[security, DateIndex]) then
+        accuSpread += DailyWeightedSpread[security, DateIndex]
+        numSec +=1
+      end if
+    end per
+    weightedValue[DateIndex] = accuSpread / numSec
+  end foreach
+  
+  foreach DateIndex, spreadValue in weightedValue[] do
+    printcsv "daily_avg_spread.csv", marketcode, DateIndex, weightedValue[DateIndex]
+  end foreach
+end at

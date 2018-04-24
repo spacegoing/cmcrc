@@ -1,0 +1,58 @@
+declare HistBBid[security]: price
+declare HistBAsk[security]: price
+declare NumSpreads[security]: number
+declare SpreadValue[security, number]: number
+declare SpreadBegin[security, number]: number
+declare SpreadEnd[security, number]: number
+declare WeightedSpread[security]: number
+
+at daystart
+  per security
+    HistBAsk[security] = $0.0
+    HistBBid[security] = $0.0
+  end per
+end at
+
+on trade
+  if defined(ask) and defined(bid) then
+    if HistBAsk[security] != ask or HistBBid[security] != bid then
+      HistBAsk[security] = ask
+      HistBBid[security] = bid
+
+      # old spread ends
+      if defined(NumSpreads[security]) then
+        SpreadEnd[security, NumSpreads[security]] = number(time)
+      end if
+
+      NumSpreads[security] += 1
+
+      # new spread begin
+      SpreadBegin[security, NumSpreads[security]] = number(time)
+      SpreadEnd[security, NumSpreads[security]] = number(time)
+      SpreadValue[security, NumSpreads[security]] = (ask - bid) / ((ask + bid)/2)
+    else
+      # old spread cont
+      SpreadEnd[security, NumSpreads[security]] = number(time)
+    end if
+  end if
+end on
+
+at dayend
+  per security
+    if defined(NumSpreads[security]) then
+      declare let beginTime = SpreadBegin[security, 1]
+      declare let endTime = SpreadEnd[security, NumSpreads[security]]
+      declare let interval = endTime - beginTime
+
+      for declare let i = 1; i <= NumSpreads[security]; i += 1 do
+        WeightedSpread[security] += 
+          (SpreadEnd[security,i] - SpreadBegin[security, i]) / interval # convert to number
+          * SpreadValue[security, i]
+      end for
+  
+      if defined(WeightedSpread[security]) then
+        printcsv "weighted_spread.csv", security, date, WeightedSpread[security]
+      end if
+    end if
+  end per
+end at

@@ -1,0 +1,45 @@
+userparams
+BENCHMARKPERIOD: "30 trading days": 30;
+end userparams
+
+declare TotalVolume[security]: volume
+declare AvgVolume[security]: volume
+declare TodayVolume[security]: volume
+
+on trade
+  if defined(volume) then
+    TodayVolume[security] += volume
+    
+    declare let avgVolume = AvgVolume[security]
+    if defined(avgVolume) then
+      
+      if TodayVolume[security] > avgVolume then
+        alert 102, "LTV", 
+        "ABNORMAL VOLUME: [security] has traded [TodayVolume[security]] so far 
+        today. This is more than the threshold of [avgVolume]",
+        intensity = (TodayVolume[security] - avgVolume) /
+          TodayVolume[security] * 100,
+        reissue = "102S+10"
+      end if
+      
+    end if
+  end if
+
+end on
+
+Benchmarks_below: BENCHMARKPERIOD trdays
+
+on trade
+  if defined(volume) then
+    TotalVolume[security] += volume
+  end if
+end on
+
+at end
+  per security
+    if defined(TotalVolume[security]) then
+      AvgVolume[security] = TotalVolume[security] / BENCHMARKPERIOD
+    end if
+  end per
+end at
+

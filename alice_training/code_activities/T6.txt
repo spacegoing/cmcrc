@@ -1,0 +1,77 @@
+## Activity1
+declare NumOfOrders: number
+declare NumOfTrades: number
+declare NumOfLargeOrders: number
+declare NumOfLargeTrades: number
+
+at start
+  printcsv "TradeDetails.csv", "Security", "Number of Orders
+  Entered", "Number of Trades"
+end at
+
+on entord
+  if security = ^CVC then
+    NumOfOrders += 1
+
+    if volume > x500 then
+      NumOfLargeOrders += 1
+    end if
+  end if
+end on 
+
+on trade
+  if security = ^CVC then
+    NumOfTrades += 1
+
+    if volume > x500 then
+      NumOfLargeTrades += 1
+    end if
+  end if
+end on 
+
+at end
+  print "Orders for CVC is [NumOfOrders]"
+  print "Orders with volume > 500 for CVC is [NumOfLargeOrders]"
+  print "Trades for CVC is [NumOfTrades]"
+  print "Trades with volume > 500 for CVC is [NumOfLargeTrades]"
+  
+  printcsv "TradeDetails.csv", "^CVC", NumOfOrders, NumOfTrades
+end at
+
+## Activity2
+
+declare Trade_Counter[string, security]: number
+declare Trade_Status[string]: boolean # Trade_Status list all market states encountered
+declare ind_cs: string
+declare count: number
+declare ind_status: boolean
+declare NumOfTrades: number
+
+on trade
+  declare let current_cs = controlstatus(security)
+
+  Trade_Status[current_cs] = True
+
+  Trade_Counter[current_cs, security] += 1
+end on
+
+at end
+  print "Name: Chang Li"
+  print "Doing: [date]"
+  foreach ind_cs, ind_status in Trade_Status[] do
+    print "---[ind_cs]---"
+
+    count = 0
+    per security
+      NumOfTrades = Trade_Counter[ind_cs, security]
+      
+      if defined(NumOfTrades) then
+        print "[security] [NumOfTrades]"
+        count += NumOfTrades
+      end if
+    end per
+
+    print "Total trades for Control Status [ind_cs] is [count]"
+  end foreach
+end at
+

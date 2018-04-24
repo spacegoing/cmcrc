@@ -1,0 +1,47 @@
+# T5 #
+
+## A1 ##
+
+declare Test_Security: security
+declare Test_String: string
+
+at start
+  Test_Security = ^CVC
+  Test_String = "Hello"
+  print "Start - Test_Security:[Test_Security] Test_String:[Test_String]"
+end at
+
+at 12:00
+  print "12:00 - Test_Security:[Test_Security] Test_String:[Test_String]"
+end at
+
+## A2 ##
+
+declare Volume_Array[security, time]: volume
+
+on trade
+  Volume_Array[security, time] = volume
+  if volume >1000 then
+    print "Security:[security]"
+    print "Time:[time]"
+    print "Volume: [Volume_Array[security, time]]"
+  end if
+end on
+
+## A3 ##
+
+on entord, amdord, delord, trade
+  if transtype == "TRADE" then
+    print "<[transtype]> security: [security], date: [date], time:
+    [time], [buy_or_sell] price: [price], volume: [volume]"
+  else
+    print "<[transtype]> security: [security], date: [date], time:
+    [time], buyerh: [buyerh], sellerh: [sellerh], price: [price], volume: [volume]"
+  end if
+end on
+
+
+
+
+
+

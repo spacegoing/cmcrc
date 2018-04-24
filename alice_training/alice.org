@@ -1,0 +1,68 @@
+* Alice Training
+
+** 1 Intro to finance market
+
+*** 1.5 & 1.6
+
+- order driven & quote driven
+- inverstors trade between each other v.s. inverstors trade to
+  market makers directly
+- quote driven market order is traded immediately
+
+*** 1.7
+
+- limit order: execute on specific price
+- market order: execute immediately, only volume is specified
+
+*** 1.8 Trade initiation
+
+- Buyer Initiated: buyer lifts the ask (buyer bid higher than ask)
+  - Bid of the trade and the ask of the trade have the same price
+  - Bid of the trade is entered after the ask of the trade 
+
+
+- Seller Initiated: seller hits the bid
+- market crossing: best bid price higher than best ask price
+
+*** 1.9 - 1.11 
+
+trading day:
+
+- pre-open session: auction trading (batch session)
+- open market session: continuous trading
+- pre-close session (post market trading): auction trading (batch
+  session)
+- pre sessions: inverstors send orders to market. Orders do not
+  execute immediately. Those orders are stored in a batch and
+  executed at a single price (open/close) at the end of pre
+  sessions
+
+
+*** Q & A
+
+**** 1.6
+
+- Insider tradings: How does market maker protect them from
+  insider tradings? What would cost them? Do they actually hold
+  positions?
+
+
+** Intro to SMARTS and Market Surveillance
+
+*** Surveillance
+
+
+- Misconducts:
+  - price manipulations
+
+  - Insider Trading: tradings based on unpublic important data
+  - Insider: people who have access to these materials
+
+
+** Alice Programming Language
+
+
+
+
+
+
