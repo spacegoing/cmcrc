@@ -74,3 +74,28 @@ wrong_isin=list()
 
 not_in_official = set(isin_list) - set(official_list)
 not_in_trth = set(official_list) - set(isin_list)
+
+# write not in trth but in official into csv
+bdt_mat = reformated_list[0].as_matrix()
+mf_mat = reformated_list[2].as_matrix()
+bdt_not_list = list()
+mf_not_list = list()
+for i in not_in_trth:
+    for j in bdt_mat:
+        if i==j[0]:
+            bdt_not_list.append(j)
+    for j in mf_mat:
+        if i==j[0]:
+            mf_not_list.append(j)
+pd.DataFrame(bdt_not_list).to_csv("./equity_filtered_list/bdt_not_in_trth.csv")
+pd.DataFrame(mf_not_list).to_csv("./equity_filtered_list/mf_not_in_trth.csv")
+
+# write not in official but in trth to csv
+trth_not_list=list()
+for i in not_in_official:
+    for j in trth_list:
+        if i==j[1]:
+            trth_not_list.append(j)
+pd.DataFrame(trth_not_list).to_csv("./equity_filtered_list/trth_not_in_official.csv")
+
+
