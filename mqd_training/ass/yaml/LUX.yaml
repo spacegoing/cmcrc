@@ -1,0 +1,99 @@
+request_split_regex: '^[^!]'
+timezone: 'Europe/Luxembourg'
+trading_market: 'luxembourg'
+listing_market:
+  method: 'refdata'
+currency:
+  method: 'refdata'
+trth_request_time: '12:00'
+
+
+instrument_types:
+  - 'EQU.Equities [113]'
+  - 'FUN.Equity-Linked [96]'
+
+download_method:
+  - date_from: '1990-01-01'
+    method: 'api'
+  - date_from: '2016-10-01'
+    method: 'exchangebyday'
+
+sessions:
+  2000-01-01:
+    '09:00:00': OPEN
+    '16:35:00': CLOSED
+  2014-12-15:
+    '07:15:00': PRE_OPEN
+    '09:00:00': OPENING
+    '09:00:30': OPEN
+    '17:30:00': PRE_CLOSE
+    '17:35:00': CLOSING
+    '17:40:00': CLOSED
+  2017-01-01:
+    '06:15:00': PRE_OPEN
+    '09:00:00': OPENING
+    '09:00:01': OPEN
+    '17:30:00': PRE_CLOSE
+    '17:35:00': CLOSING
+    '17:40:00': CLOSED
+
+ric_filter:
+  - ignore_regex: '\_t.LU$' # instruments' name end with '_t.LU' are warrents
+  - ignore_regex: '^\d+[A-Za-z]+.LU$' # remove debt instruments
+
+qualifiers:
+  PRC_QL2:
+    /^ *$/: []
+    /^ *RCK *$/: []
+    /^ *CLS *$/: [] # Market Closed
+    /^ *AUH *$/: [] # Trading Halt
+    /^ *OTW *$/: [] # Opening eriod
+    /^ *POP *$/: [] # Pre-opening phase
+    /^ *SDC *$/: [] # Start ofday consulation period
+    /^ *SIN *$/: [] # Surveillnce Intervention
+    /^ *TRD *$/: [] # Trading at Last
+    /^ *EDC *$/: [] # Late montoring
+  PRC_QL3:
+    /^ *IND *$/: [] # Indicative Trade
+  PRC_QL_CD:
+    /^ *$/: []
+    /^ *A *$/: []
+    /^ *AUC *$/: [FLAG_OPENING] # Auction
+    /^ *IND *$/: [] # Indicative trade
+    /^ *SUS *$/: [] # suspended
+    /^ *R *$/: [] # No liquidity provider
+    /^ *TH *$/: [] # Halt
+    /^ *OPN *$/: []
+    /^ *PAC *$/: [] # Trading at Last
+    /^ *ASK *$/: []
+    /^ *BID *$/: []
+    /^ *RAP *$/: [] # Reduced Ask Price
+    /^ *RBP *$/: [] # Reduced Bid Price
+    /^ *INP *$/: [] # Indicative price in last trade field
+  USER:
+    /^ *High *$/: [] #High Price
+    /^ *Low *$/: [] #Low Price
+    /^ *Open *$/: [] #Open Price
+    /^ *Open *\| *High *$/: [] #Open and High Price
+    /^ *High *\| *Low *$/: [] #High and Low Price
+    /^ *Open\|High\|Low *$/: [] #Open Message
+  BID_TONE:
+    /^ *A *$/: [] # Bid during opening or pre-opening stage
+    /^ *M *$/: [] # Market order Bid price
+  ASK_TONE:
+    /^ *A *$/: [] # Ask during opening or pre-opening stage
+    /^ *M *$/: [] # Market order Ask price
+  ACT_FLAG1:
+    /^ *$/: []
+    /^ *A *$/: [] # Auction trade
+    /^ *P *$/: [] # Trading at last
+  GV4_TEXT:
+    /^.*$/: [] # These abbreviations are the name of each Bourse Du Luxembourg Trading Groups
+  GV8_TEXT:
+    /^ *OPEN *$/: [] # Open auction begins
+    /^ *OSUMRY *$/: [] # End of Open auction
+    /^ *CLOSE *$/: [] # Close Auction begins
+    /^ *CSUMRY *$/: [] # End of Close Auction
+    /^ *VOLT *$/: [] # Volatility Auction begins
+    /^ *VSUMRY *$/: [] # End of Volatility Auction
+
