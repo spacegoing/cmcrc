@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 import numpy as np
 import six
 
@@ -98,4 +99,32 @@ for i in not_in_official:
             trth_not_list.append(j)
 pd.DataFrame(trth_not_list).to_csv("./equity_filtered_list/trth_not_in_official.csv")
 
+def save_csv(list_var,name):
+    pd.DataFrame(list_var).to_csv(name)
 
+# invalid list
+exported_trth_list = pd.read_csv('trth_exported_1.csv', header=None, index_col=None).as_matrix()[1:,:]
+exported_trth_mat = exported_trth_list[:,1]
+exported_trth_filtered_list = [i.split("->")[-1] if (isinstance(i, six.string_types)) and ("->" in i) else i for i in exported_trth_mat]
+invalid_isin = set(official_list) - set(exported_trth_filtered_list)
+invalid_isin = list(invalid_isin)
+
+save_csv(exported_trth_mat, 'invalid_exported_mat.csv')
+save_csv(official_list, 'official_list.csv')
+save_csv(invalid_isin, 'invalid_isin.csv')
+
+# generate ric lists
+ric_features_list = []
+
+for i in official_list:
+    flag = False
+    for j in exported_trth_list:
+        if isinstance(j[1], six.string_types):
+            if i in j[1]:
+                ric_features_list.append(j)
+                flag = True
+    if not flag:
+        print(i)
+save_csv(ric_features_list, "ric_features_list.csv")
+a = np.array(ric_features_list)
+b = set(a[:,1])
