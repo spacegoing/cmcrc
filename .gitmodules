@@ -1,0 +1,3 @@
+[submodule "Credit_CRC"]
+	path = Credit_CRC
+	url = git@github.com:spacegoing/Credit_CRC.git
